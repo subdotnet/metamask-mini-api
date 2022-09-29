@@ -4,31 +4,31 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace metamask_mini_api.Services;
 
 public static class Extensions
 {
+    public const string HexPrefix = "0x";
     public static string ToHexString(this int number)
     {
-        return "0x" + number.ToString("X2");
+        return HexPrefix + number.ToString("X2");
     }
     public static string ToHexString(this long number)
     {
-        return "0x" + number.ToString("X2");
+        return HexPrefix + number.ToString("X2");
     }
     public static string ToHexString(this BigInteger number)
     {
-        return "0x" + number.ToString("X2");
+        return HexPrefix + number.ToString("X2");
     }
     public static string ToHexString(this byte[] bytes)
     {
-        return "0x" + Convert.ToHexString(bytes);
+        return HexPrefix + Convert.ToHexString(bytes);
     }
     public static BigInteger HexStringToBigInt(this string hexNumber)
     {
-        var input = hexNumber.StartsWith("0x")? hexNumber.Substring(2) : hexNumber;
+        var input = hexNumber.StartsWith(HexPrefix)? hexNumber.Substring(2) : hexNumber;
         if (BigInteger.TryParse(input,
                     NumberStyles.AllowHexSpecifier,
                     null, out var result))

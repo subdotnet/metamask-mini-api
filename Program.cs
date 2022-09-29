@@ -1,15 +1,18 @@
+using Microsoft.VisualBasic;
 using metamask_mini_api.Services;
-using Seq.Api;
 using Serilog;
+using Serilog.Events;
 
-// Console.WriteLine("starting...");
-// var connection = new SeqConnection("http://localhost:18080", "ZHJOkr6jFfLrcGBZs2ZU");
+// var connection = new Seq.Api.SeqConnection("http://localhost:18080", "ZHJOkr6jFfLrcGBZs2ZU");
 // await connection.Events.DeleteAsync();
 
+Console.WriteLine("json-rpc api listening on " + metamask_mini_api.Shared.Constants.Url);
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://localhost:5035");
+builder.WebHost.UseUrls(metamask_mini_api.Shared.Constants.Url);
 var myLogger = new LoggerConfiguration()
-    .MinimumLevel.Warning()
+    .Destructure.ByTransforming<System.Numerics.BigInteger>(x => x.ToString())
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .Enrich.With()
     .WriteTo.Console()//outputTemplate:"{HH:mm:ss.fff zzz} [{Level}] ({SourceContext}.{Method}) {Message}{NewLine}{Exception}")
     // .WriteTo.Seq("http://localhost:5341")

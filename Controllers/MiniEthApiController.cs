@@ -1,5 +1,6 @@
 using System.Text;
 using metamask_mini_api.Services;
+using metamask_mini_api.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace metamask_mini_api.Controllers;
@@ -53,15 +54,23 @@ public class MinimalEthApiController : ControllerBase
             var logTemplate = "MiniController.Post - Request : {@rawrequest} - Response : {@result}";
             if (exception != null)
             {
-                _logger.LogError(exception, logTemplate, rawrequest, result);
+                _logger.LogError(exception, logTemplate, rawrequest, Serialize(result));
             }
             else
             {
-                _logger.LogWarning(logTemplate, rawrequest, result);
+                _logger.LogDebug(logTemplate, rawrequest, Serialize(result));
             }
         }
         return result;
     }
+
+    private string Serialize(JsonRpcResponse? result)
+    {
+        return (result == null) 
+            ? "NULL"
+            : System.Text.Json.JsonSerializer.Serialize(result);
+    }
+
     private async Task<string> GetRawRequest()
     {
         var ms = new MemoryStream();
@@ -87,4 +96,5 @@ public class MinimalEthApiController : ControllerBase
             $"Exception({e.Message}) - RawRequest:{rawrequest}"));
         }
     }
+
 }

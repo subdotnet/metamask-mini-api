@@ -14,11 +14,10 @@ Methods implemented
   - eth_getTransactionReceipt
   - eth_getBlockByHash
 
-There's good documentation on infura's website (ex : [getBlockByHash](https://docs.infura.io/infura/networks/ethereum/json-rpc-methods/eth_getblockbyhash))
+I found that the ethereum apis are well documented on infura's website (ex : [getBlockByHash](https://docs.infura.io/infura/networks/ethereum/json-rpc-methods/eth_getblockbyhash))
 
 
-
-DEMO : 
+# DEMO : 
 Configure metamask
 url : http://localhost:5035/
 chainid: 12345

@@ -12,17 +12,16 @@ public class MinimalEthApi
     {
         BlockChain = blockChain;
     }
-    public const string ChainId = "0x3039";//12345
     public JsonRpcResponse ProcessRequest(JsonRpcRequest request)
     {
         var parameters = GetParametersAsString(request.parameters);
         var firstParameter = parameters.First();
         object? result = request.method switch
         {
-            "eth_chainId" => ChainId,
+            "eth_chainId" => Constants.ChainId,
             "eth_blockNumber" => GetBlockNumber(),
             "eth_getBalance" => GetBalance(firstParameter),
-            "net_version" => ChainId,
+            "net_version" => Constants.ChainId,
             "eth_getBlockByNumber" => GetBlockByNumber(firstParameter),
             "eth_gasPrice" => GetGasPrice(),
             "eth_estimateGas" => EstimateGas(),
@@ -47,7 +46,7 @@ public class MinimalEthApi
             );
         }
         var block = BlockChain.Blocks[blockHash];
-        return new SimpleBlockReceipt(block.Transactions.Keys.ToArray(), block.Hash, block.ParentHash, block.Timestamp, block.BlockNumber, "0x4db7a1c01d8a8072");
+        return new SimpleBlockReceipt(block.Transactions.Keys.ToArray(), block.Hash, block.ParentHash, block.Timestamp, block.BlockNumber, Constants.FakeNonce);
     }
 
     private Shared.SimpleTransactionReceipt? GetTransactionReceipt(string transactionHash)
@@ -61,12 +60,12 @@ public class MinimalEthApi
                     var index = Array.IndexOf(block.Value.Transactions.Keys.ToArray(), transactionHash);
                     var transaction = BlockChain.Transactions[transactionHash];
                     var errorMessage = block.Value.Transactions[transactionHash];
-                    var status = string.IsNullOrEmpty(errorMessage) ? "0x1" : "0x0";
+                    var status = string.IsNullOrEmpty(errorMessage) ? Constants.One : Constants.Zero;
                     return new SimpleTransactionReceipt(
                         block.Value.Hash,
                         block.Value.BlockNumber,
                         transaction.From,
-                        "0x0",
+                        Constants.Zero,
                         status,
                         transaction.To,
                         transactionHash,
@@ -92,22 +91,22 @@ public class MinimalEthApi
 
     private string GetTransactionCount()
     {
-        return "0x0";
+        return Constants.Zero;
     }
 
     private string GetCode()
     {
-        return "0x0";
+        return Constants.Zero;
     }
 
     private string EstimateGas()
     {
-        return "0x5208";
+        return Constants.FakeMinGas;
     }
 
     private string GetGasPrice()
     {
-        return "0x0";
+        return Constants.Zero;
     }
 
     private SimpleBlock? GetBlockByNumber(string blockNumber)
@@ -118,7 +117,7 @@ public class MinimalEthApi
 
     private string GetBalance(string address)
     {
-        var result = "0x0";
+        var result = Constants.Zero;
         address = address.ToLower();
         if (LastBlock.Balances.ContainsKey(address))
         {

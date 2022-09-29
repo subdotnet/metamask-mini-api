@@ -71,7 +71,7 @@ namespace metamask_mini_api.Services
                         }
                         var block = CreateBlock(blockNumber.ToHexString(), lastBlock.Hash, transactions, balances);
                         Blocks.Add(block.Hash, block);
-                        Serilog.Log.Warning("added block {@block}", block);
+                        Serilog.Log.Debug("added block {@block}", block);
                     }
                 }
             }
@@ -85,12 +85,12 @@ namespace metamask_mini_api.Services
 
         public static SimpleBlock GenesisBlock()
         {
-            var blockNumber = "0x0";
-            var previousHash = "0x0";
+            var blockNumber = Constants.Zero;
+            var previousHash = Constants.Zero;
             var transactions = new Dictionary<string, string>();
             var balances = new Dictionary<string, BigInteger>(){
-                {"0x7bdCc0809d6954049E15c0D2De49E6d608c6c64F".ToLower(), Nethereum.Util.UnitConversion.Convert.ToWei(1)},
-                {"0xc90a1E4F11248B7657fC845cAE769E00463C81b8".ToLower(), Nethereum.Util.UnitConversion.Convert.ToWei(113)}
+                {Constants.GenesisWallet1, Nethereum.Util.UnitConversion.Convert.ToWei(42)},
+                {Constants.GenesisWallet2, Nethereum.Util.UnitConversion.Convert.ToWei(1337)}
             };
             var block = CreateBlock(blockNumber, previousHash, transactions, balances);
             return block;
@@ -110,7 +110,7 @@ namespace metamask_mini_api.Services
             var transaction = new SimpleTransaction(timestamp, from, to, amount, data, hash);
             if (TransactionPool.ContainsKey(hash) || Transactions.ContainsKey(hash))
             {
-                Serilog.Log.Warning("eth_ eth_ transaction already exists..." + hash);
+                Serilog.Log.Debug("eth_ eth_ transaction already exists..." + hash);
             }
             else
             {
